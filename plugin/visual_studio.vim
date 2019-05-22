@@ -64,7 +64,7 @@ if ! exists ('g:visual_studio_quickfix_errorformat_task_list')
     let g:visual_studio_quickfix_errorformat_task_list = '%f(%l)\ %#:\ %#%m'
 endif
 if ! exists ('g:visual_studio_has_python')
-    let g:visual_studio_has_python = has('python')
+    let g:visual_studio_has_python = has('python3')
 endif
 if ! exists ('g:visual_studio_python_exe')
     let g:visual_studio_python_exe = 'python.exe'
@@ -91,9 +91,9 @@ function! <Sid>PythonInit()
         return 1
     endif
     if g:visual_studio_has_python
-        python import sys
-        exe 'python sys.path.append(r"'.s:visual_studio_location.'")'
-        exe 'python import '.s:visual_studio_module
+        python3 import sys
+        exe 'python3 sys.path.append(r"'.s:visual_studio_location.'")'
+        exe 'python3 import '.s:visual_studio_module
     else
         call <Sid>PythonDllCheck()
         if ! <Sid>PythonExeCheck()
@@ -169,7 +169,7 @@ function! <Sid>DTEExec(fcn_py, ...)
 
     if g:visual_studio_has_python
         let pyargs = join(arglist, ',')
-        exe 'python ' . s:visual_studio_module . '.' . a:fcn_py . '(' . pyargs . ')'
+        exe 'python3 ' . s:visual_studio_module . '.' . a:fcn_py . '(' . pyargs . ')'
     else
         let pyargs = join(arglist, ' ')
         let vim_pid = <Sid>GetPid()
@@ -191,8 +191,8 @@ function! DTEReload()
         return
     endif
     if g:visual_studio_has_python
-        exe 'python reload ('.s:visual_studio_module.')'
-        exe 'python import '.s:visual_studio_module
+        exe 'python3 reload ('.s:visual_studio_module.')'
+        exe 'python3 import '.s:visual_studio_module
         echo s:visual_studio_module . ".py is reloaded."
     endif
 endfunction

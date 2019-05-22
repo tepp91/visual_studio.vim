@@ -16,7 +16,7 @@ if _logging_enabled:
     logging.basicConfig (filename=_filename_log, filemode='w', level=logging.DEBUG,
         format='%(asctime)s %(levelname)-8s %(pathname)s(%(lineno)d)\n%(message)s\n')
 else:
-    logging.basicConfig (level=sys.maxint)  # disables logging
+    logging.basicConfig ()  # disables logging
 logging.info ('starting')
 
 vsBuildStateNotStarted = 1   # Build has not yet been started.
@@ -35,7 +35,7 @@ def dte_compile_file (vs_pid, fn_quickfix):
     if not dte: return
     try:
         dte.ExecuteCommand ('Build.Compile')
-    except Exception, e:
+    except Exception as e:
         logging.exception (e)
         _dte_exception (e)
         _vim_activate ()
@@ -72,7 +72,7 @@ def dte_build_solution(vs_pid, fn_quickfix, write_first):
         dte.Solution.SolutionBuild.Build (1)
         # Build is not synchronous so we have to wait
         _dte_wait_for_build (dte)
-    except Exception, e:
+    except Exception as e:
         logging.exception (e)
         _dte_exception (e)
         _vim_activate ()
@@ -111,7 +111,7 @@ def dte_build_project(vs_pid, fn_quickfix, write_first, project_name=None):
         dte.Solution.SolutionBuild.BuildProject(configuration_name, project_unique_name, 1)
         # Build is not synchronous so we have to wait
         _dte_wait_for_build (dte)
-    except Exception, e:
+    except Exception as e:
         logging.exception (e)
         _dte_exception (e)
         _vim_activate ()
@@ -129,7 +129,7 @@ def dte_set_startup_project(vs_pid, project_name, project_index):
     if not dte: return
     try:
         dte.Solution.Properties('StartupProject').Value = project_name
-    except Exception, e:
+    except Exception as e:
         logging.exception (e)
         _dte_exception(e)
         return
@@ -161,7 +161,7 @@ def dte_task_list (vs_pid, fn_quickfix):
         except: line = '<no-line>'
         try: description = TLItem.Description
         except: description = '<no-description>'
-        print >>fp_task_list, '%s(%s) : %s' % (filename, line, description)
+        print('{}({}) : {}'.format(filename, line, description), file=fp_task_list)
     fp_task_list.close ()
     _vim_command ('call <Sid>DTEQuickfixOpen ("Task List")')
     _vim_status ('VS Task list')
@@ -480,9 +480,9 @@ def _vim_command (lst_cmd):
             vim.command (cmd)
         else:
             if cmd.startswith ('normal'):
-                print 'exe "%s"' % cmd
+                print('exe "{}"'.format(cmd))
             else:
-                print cmd
+                print(cmd)
 
 #----------------------------------------------------------------------
 
@@ -530,12 +530,12 @@ def main ():
     prog = os.path.basename(sys.argv[0])
     logging.info ('main sys.argv: %s' % sys.argv)
     if len(sys.argv) == 1:
-        print 'echo "ERROR: not enough args to %s"' % prog
+        print('echo "ERROR: not enough args to {}"'.format(prog))
         return
 
     fcn_name = sys.argv[1]
     if not globals().has_key(fcn_name):
-        print 'echo "ERROR: no such function %s in %s"' % (fcn_name, prog)
+        print('echo "ERROR: no such function {} in {}"'.format(fcn_name, prog))
         return
 
     if sys.argv[-1].startswith ('vim_pid='):
@@ -546,8 +546,8 @@ def main ():
     fcn = globals()[fcn_name]
     try:
         fcn (*sys.argv[2:])
-    except TypeError, e:
-        print 'echo "ERROR in %s: %s"' % (prog, str(e))
+    except TypeError as e:
+        print('echo "ERROR in {}: {}"'.format(prog, str(e)))
         return
 
 if __name__ == '__main__': main()
