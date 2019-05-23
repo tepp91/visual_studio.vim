@@ -31,16 +31,16 @@ endif
 " make sure to escape backslashes.
 
 if ! exists ('g:visual_studio_task_list')
-    let g:visual_studio_task_list = $TEMP.'\\vs_task_list.txt'
+    let g:visual_studio_task_list = $TEMP.'\vs_task_list.txt'
 endif
 if ! exists ('g:visual_studio_output')
-    let g:visual_studio_output = $TEMP.'\\vs_output.txt'
+    let g:visual_studio_output = $TEMP.'\vs_output.txt'
 endif
 if ! exists ('g:visual_studio_find_results_1')
-    let g:visual_studio_find_results_1 = $TEMP.'\\vs_find_results_1.txt'
+    let g:visual_studio_find_results_1 = $TEMP.'\vs_find_results_1.txt'
 endif
 if ! exists ('g:visual_studio_find_results_2')
-    let g:visual_studio_find_results_2 = $TEMP.'\\vs_find_results_2.txt'
+    let g:visual_studio_find_results_2 = $TEMP.'\vs_find_results_2.txt'
 endif
 if ! exists ('g:visual_studio_quickfix_height')
     let g:visual_studio_quickfix_height = 20
@@ -164,7 +164,7 @@ function! <Sid>DTEExec(fcn_py, ...)
     " NOTE: rewrote argument creation to use join; looks nicer
     let arglist = [s:visual_studio_pid]
     for pyarg in a:000
-        let arglist += ["\"" . pyarg . "\""]
+        let arglist += ["r\"" . pyarg . "\""]
     endfor
 
     if g:visual_studio_has_python
