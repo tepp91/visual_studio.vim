@@ -141,7 +141,7 @@ def dte_set_startup_project(vs_pid, project_name, project_index):
 
 def dte_task_list (vs_pid, fn_quickfix):
     logging.info ('== dte_task_list %s' % vars())
-    fp_task_list = file (fn_quickfix, 'w')
+    fp_task_list = open (fn_quickfix, 'w')
     dte = _get_dte(vs_pid)
     dte.ExecuteCommand ('View.TaskList')
     if not dte: return
@@ -188,7 +188,7 @@ def dte_output (vs_pid, fn_output, window_caption, notify=None):
     lst_text = str(sel.Text).splitlines()
     lst_text = _fix_filenames (os.path.dirname(dte.Solution.FullName), lst_text)
     sel.Collapse()
-    fp_output = file (fn_output, 'w')
+    fp_output = open (fn_output, 'w')
     fp_output.write ('\n'.join(lst_text))
     fp_output.close()
     _vim_command ('call <Sid>DTEQuickfixOpen ("%s")' % window_caption)
