@@ -194,9 +194,8 @@ def dte_output (vs_pid, fn_output, window_caption, notify=None):
     lst_text = str(sel.Text).splitlines()
     lst_text = _fix_filenames (os.path.dirname(dte.Solution.FullName), lst_text)
     sel.Collapse()
-    fp_output = open (fn_output, 'w')
-    fp_output.write ('\n'.join(lst_text))
-    fp_output.close()
+    with open (fn_output, 'w', encoding='utf-8') as fp_output:
+        fp_output.write ('\n'.join(lst_text))
     _vim_command ('call <Sid>DTEQuickfixOpen ("%s")' % window_caption)
     # notify is passed in as a string
     if notify and notify != '0':
