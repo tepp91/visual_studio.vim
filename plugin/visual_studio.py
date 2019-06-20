@@ -170,17 +170,23 @@ def dte_task_list (vs_pid, fn_quickfix):
 
 def dte_output (vs_pid, fn_output, window_caption, notify=None):
     logging.info ('== dte_output %s' % vars())
-    if window_caption not in ['Find Results 1', 'Find Results 2', 'Output']:
+    window_dict = {
+            'Find Results 1': '{0F887920-C2B6-11D2-9375-0080C747D9A0}',
+            'Find Results 2': '{0F887921-C2B6-11D2-9375-0080C747D9A0}',
+            'Output':         '{34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3}' }
+    if window_caption not in window_dict:
         _vim_msg ('Error: unrecognized window (%s)' % window_caption)
         return
+    window_guid = window_dict[window_caption]
     dte = _get_dte(vs_pid)
     if not dte: return
-    window = _dte_get_window(dte, window_caption)
+    window = _dte_get_window(dte, window_guid)
     if not window:
         _vim_msg ('Error: window not active (%s)' % window_caption)
         return
     if window_caption == 'Output':
-        owp = window.Object.OutputWindowPanes.Item ('Build')
+        build_pane_guid = '{1BD8A850-02D1-11D1-BEE7-00A0C913D1F8}'
+        owp = window.Object.OutputWindowPanes.Item (build_pane_guid)
         sel = owp.TextDocument.Selection
     else:
         sel = window.Selection
